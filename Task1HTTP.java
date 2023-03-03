@@ -17,7 +17,7 @@ public class Task1HTTP {
       String uri = "https://jsonplaceholder.typicode.com/users";
       HttpRequest httpRequest = HttpRequest.newBuilder(new URI(uri))
               .headers("Content-Type", "application/json")
-              .POST(HttpRequest.BodyPublishers.ofFile(Path.of(newUser)))
+              .POST(HttpRequest.BodyPublishers.ofString(newUser))
               .build();
       HttpClient httpClient = HttpClient.newBuilder()
               .version(HttpClient.Version.HTTP_1_1)
@@ -26,11 +26,12 @@ public class Task1HTTP {
       System.out.println("httpResponse.statusCode() = " + httpResponse.statusCode());
    }
 
-   public void sendPut() throws IOException, InterruptedException, URISyntaxException {
-      String uri = "https://jsonplaceholder.typicode.com/users";
+   public void sendPut(User user) throws IOException, InterruptedException, URISyntaxException {
+      String newUser = new Gson().toJson(user);
+      String uri = "https://jsonplaceholder.typicode.com/users/1";
       HttpRequest httpRequest = HttpRequest.newBuilder(new URI(uri))
               .headers("Content-Type", "application/json")
-              .PUT(HttpRequest.BodyPublishers.noBody())
+              .PUT(HttpRequest.BodyPublishers.ofString(newUser))
               .build();
       HttpClient httpClient = HttpClient.newBuilder()
               .version(HttpClient.Version.HTTP_1_1)
@@ -39,8 +40,8 @@ public class Task1HTTP {
       System.out.println("httpResponse.statusCode() = " + httpResponse.statusCode());
    }
 
-   public void sendDelete() throws IOException, InterruptedException, URISyntaxException {
-      String uri = "https://jsonplaceholder.typicode.com/users";
+   public void sendDelete(int id) throws IOException, InterruptedException, URISyntaxException {
+      String uri = "https://jsonplaceholder.typicode.com/users/" + id;
       HttpRequest httpRequest = HttpRequest.newBuilder(new URI(uri))
 
               .headers("Content-Type", "application/json")
@@ -52,5 +53,48 @@ public class Task1HTTP {
       HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
       System.out.println("httpResponse.statusCode() = " + httpResponse.statusCode());
    }
+
+   public void sendGet() throws URISyntaxException, IOException, InterruptedException {
+      String uri = "https://jsonplaceholder.typicode.com/users/";
+      HttpRequest httpRequest = HttpRequest.newBuilder(new URI(uri))
+
+              .headers("Content-Type", "application/json")
+              .GET()
+              .build();
+      HttpClient httpClient = HttpClient.newBuilder()
+              .version(HttpClient.Version.HTTP_1_1)
+              .build();
+      HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+      System.out.println("httpResponse.statusCode() = " + httpResponse.statusCode());
+   }
+
+   public void sendGetById(int id) throws IOException, InterruptedException, URISyntaxException {
+      String uri = "https://jsonplaceholder.typicode.com/users/" + id;
+      HttpRequest httpRequest = HttpRequest.newBuilder(new URI(uri))
+              .headers("Content-Type", "application/json")
+              .GET()
+              .build();
+      HttpClient httpClient = HttpClient.newBuilder()
+              .version(HttpClient.Version.HTTP_1_1)
+              .build();
+      HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+      System.out.println("httpResponse.statusCode() = " + httpResponse.statusCode());
+      System.out.println("httpResponse.body() = " + httpResponse.body());
+   }
+   public void sendGetByUserName(String username) throws IOException, InterruptedException, URISyntaxException {
+      String uri = "https://jsonplaceholder.typicode.com/users?username=" + username;
+      HttpRequest httpRequest = HttpRequest.newBuilder(new URI(uri))
+              .headers("Content-Type", "application/json")
+              .GET()
+              .build();
+      HttpClient httpClient = HttpClient.newBuilder()
+              .version(HttpClient.Version.HTTP_1_1)
+              .build();
+      HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+      System.out.println("httpResponse.statusCode() = " + httpResponse.statusCode());
+      System.out.println("httpResponse.body() = " + httpResponse.body());
+   }
 }
+
+
 

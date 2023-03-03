@@ -15,7 +15,10 @@ public class HTTPTask1Test {
                 new Company("Romaguera-Crona","Multi-layered client-server neural-net","harness real-time e-markets")
                 );
         task1HTTP.postUrl(user);
-//        task1HTTP.sendPut();
-//        task1HTTP.sendDelete();
+        task1HTTP.sendPut(user);
+        task1HTTP.sendDelete(1);
+        task1HTTP.sendGet();
+        task1HTTP.sendGetById(1);
+        task1HTTP.sendGetByUserName("Bret");
     }
 }
