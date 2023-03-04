@@ -26,9 +26,9 @@ public class Task1HTTP {
       System.out.println("httpResponse.statusCode() = " + httpResponse.statusCode());
    }
 
-   public void sendPut(User user, int userId) throws IOException, InterruptedException, URISyntaxException {
+   public void sendPut(User user) throws IOException, InterruptedException, URISyntaxException {
       String newUser = new Gson().toJson(user);
-      String uri = "https://jsonplaceholder.typicode.com/users/" + userId;
+      String uri = "https://jsonplaceholder.typicode.com/users/" + user.getId();
       HttpRequest httpRequest = HttpRequest.newBuilder(new URI(uri))
               .headers("Content-Type", "application/json")
               .PUT(HttpRequest.BodyPublishers.ofString(newUser))
