@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class Task2HTTP {
 
 
-    public void sendPostbyId(int num) throws URISyntaxException, IOException, InterruptedException {
+    public void sendPostbyId(int num, int postNum) throws URISyntaxException, IOException, InterruptedException {
         String uri = "https://jsonplaceholder.typicode.com/posts/" + num + "/comments";
         HttpRequest httpRequest = HttpRequest.newBuilder(new URI(uri))
                 .headers("Content-Type", "application/json")
@@ -28,12 +28,12 @@ public class Task2HTTP {
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         System.out.println("httpResponse.statusCode() = " + httpResponse.statusCode());
         String comment = httpResponse.body();
-        try (OutputStream fis = new FileOutputStream("user-X-post-Y-comments.json")) {
-             fis.write(comment.getBytes());
-             fis.flush();
-         }  catch (IOException e) {
-             throw new RuntimeException(e);
-         }
+        try (OutputStream fis = new FileOutputStream("user-" + num + "-post-" + postNum + "-comments.json")) {
+            fis.write(comment.getBytes());
+            fis.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Integer lastPostId(URI uri) throws Exception {
@@ -56,5 +56,29 @@ public class Task2HTTP {
 
         int num = howmanyidies.get(0);
         return num;
+    }
+
+    public static Integer lastLastPostCommentIdCo(int num) throws Exception {
+        String uri = "https://jsonplaceholder.typicode.com/posts/" + num + "/comments";
+        HttpRequest getAllRequest = HttpRequest.newBuilder(new URI(uri))
+                .build();
+        HttpClient httpClient = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
+        HttpResponse<String> getAllResponse = httpClient.send(getAllRequest, HttpResponse.BodyHandlers.ofString());
+
+        List<Comment> comments = new Gson().fromJson(getAllResponse.body(), new TypeToken<List<Comment>>() {
+        }.getType());
+
+        List<Integer> numPostNumber = comments.stream()
+                .sorted(Comparator.comparing(Comment::getPostId).reversed())
+                .map(Comment::getPostId)
+                .limit(1)
+                .collect(Collectors.toList());
+
+        int postNum = numPostNumber.get(0);
+        return postNum;
+
+
     }
 }
